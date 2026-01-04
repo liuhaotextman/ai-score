@@ -21,3 +21,5 @@ Desktop.ini
 
 # Logs
 *.log
+
+ai -score.session.sql

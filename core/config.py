@@ -16,9 +16,14 @@ class PgSQLConfig(BaseModel):
     Pass: str
     DB: str
 
+class GeminiConfig(BaseModel):
+    TextModel: str
+    EmbeddingModel: str
+
 class Config(BaseModel):
     Redis: RedisConfig
     PgSQL: PgSQLConfig
+    Gemini: GeminiConfig
     GeminiAPIKey: str
 
 def load_config() -> Config:

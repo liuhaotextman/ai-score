@@ -8,7 +8,12 @@ from typing import List
 class VectorService:
     async def add_knowledge(self, db: AsyncSession, content: str, source: str = None):
         vector = await gemini_service.get_embedding(content)
-        knowledge = Knowledge(content=content, vector=vector, source=source)
+        knowledge = Knowledge(
+            content=content, 
+            vector=vector, 
+            source=source,
+            embedding_model=gemini_service.embedding_model_id
+        )
         db.add(knowledge)
         await db.commit()
         await db.refresh(knowledge)
@@ -16,8 +21,10 @@ class VectorService:
 
     async def search_similar(self, db: AsyncSession, query_text: str, limit: int = 3) -> List[Knowledge]:
         query_vector = await gemini_service.get_embedding(query_text)
-        # Using cosine distance for similarity search
-        stmt = select(Knowledge).order_by(Knowledge.vector.cosine_distance(query_vector)).limit(limit)
+        # Using cosine distance for similarity search, filtering by model
+        stmt = select(Knowledge).where(
+            Knowledge.embedding_model == gemini_service.embedding_model_id
+        ).order_by(Knowledge.vector.cosine_distance(query_vector)).limit(limit)
         result = await db.execute(stmt)
         return result.scalars().all()
 

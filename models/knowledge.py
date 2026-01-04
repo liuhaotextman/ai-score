@@ -10,3 +10,4 @@ class Knowledge(Base):
     content: Mapped[str] = mapped_column(Text, nullable=False)
     vector: Mapped[list] = mapped_column(Vector(768)) # Gemini text-embedding-004 is usually 768 dims
     source: Mapped[str] = mapped_column(Text, nullable=True)
+    embedding_model: Mapped[str] = mapped_column(Text, nullable=False, default="text-embedding-004")

@@ -9,6 +9,7 @@ class KnowledgeResponse(BaseModel):
     id: int
     content: str
     source: Optional[str] = None
+    embedding_model: str
 
     class Config:
         from_attributes = True

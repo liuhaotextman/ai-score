@@ -10,3 +10,7 @@ PgSQL:
   User: "postgres"
   Pass: "root"
   DB: "exam_grading"
+
+Gemini:
+  TextModel: "gemini-3-flash-preview"
+  EmbeddingModel: "text-embedding-004"

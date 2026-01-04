@@ -6,12 +6,13 @@ from typing import List
 class GeminiService:
     def __init__(self):
         self.client = genai.Client(api_key=settings.GeminiAPIKey)
-        self.model_id = "gemini-2.0-flash" # Use a modern flash model for speed
+        self.model_id = settings.Gemini.TextModel
+        self.embedding_model_id = settings.Gemini.EmbeddingModel
 
     async def get_embedding(self, text: str) -> List[float]:
         # google-genai SDK embedding call
         response = self.client.models.embed_content(
-            model="text-embedding-004",
+            model=self.embedding_model_id,
             contents=text,
             config=types.EmbedContentConfig(output_dimensionality=768)
         )
