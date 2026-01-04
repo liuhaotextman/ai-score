@@ -1,0 +1,12 @@
+Redis:
+  Host: "127.0.0.1"
+  Port: 6379
+  Pass: ""
+  DB: 0
+
+PgSQL:
+  Host: "127.0.0.1"
+  Port: 5432
+  User: "postgres"
+  Pass: "root"
+  DB: "exam_grading"
