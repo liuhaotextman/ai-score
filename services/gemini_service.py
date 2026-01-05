@@ -19,30 +19,31 @@ class GeminiService:
         return response.embeddings[0].values
 
     async def generate_score(self, question: str, answer: str, context: str) -> str:
+        # Use GradeResponse schema for controlled generation
+        from schemas.grading import GradeResponse
+        
         system_instruction = """
-        你是一个专业的老师，请根据提供的参考知识库内容对学生的回答进行评分（0-100分）。
-        请给出评分，并给出简短的评语。返回格式必须为有效的 JSON: {"score": 85, "reason": "..."}
-        如果参考知识库内容不足以支持评分，请基于你的通用知识进行评分，并在评语中注明。
+        你是一个专业的阅卷老师。你的任务是根据提供的【参考知识库】对【学生回答】进行评分（0-100分）。
+        请仔细阅读 <question>、<context> 和 <answer> 标签中的内容，并给出客观的评分和理由。
+        如果参考知识库不足以支持评分，请基于你的通用知识进行补充。
         """
         
         prompt = f"""
-        【试题内容】：
-        {question}
-        
-        【参考知识库】：
-        {context}
-        
-        【学生回答】：
-        {answer}
+        <question>{question}</question>
+        <context>{context}</context>
+        <answer>{answer}</answer>
         """
         
         response = self.client.models.generate_content(
             model=self.model_id,
             contents=prompt,
             config=types.GenerateContentConfig(
-                system_instruction=system_instruction
+                system_instruction=system_instruction,
+                response_mime_type="application/json",
+                response_schema=GradeResponse
             )
         )
+        # In JSON mode, response.text is guaranteed to be a valid JSON string
         return response.text
 
 gemini_service = GeminiService()
